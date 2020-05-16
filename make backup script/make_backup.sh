@@ -11,8 +11,8 @@ function check_dir_loc {
   if [ ! -s  "/backup_dirs.conf" ]
   then
     echo "Kérem készítsen egy listát azokról a mappákról/directory-ról amről mentést szeretne készíteni.
-    Készítsen egy backup_dir.conf nevű fájlt a root directory-ban"
-    exit]
+    Készítsen egy backup_dirs.conf nevű fájlt a root directory-ban"
+    exit ]
   fi
 }
 function check_backup_loc {
@@ -35,28 +35,27 @@ function check_schedule {
 
 }
 function perform_backup {
-  #eltároljuk a mentési helyet
-  backup_path = $(cat /backup_loc.conf)
+	 #eltároljuk a mentési helyet
+ 	 backup_path = $(cat /backup_loc.conf)
 
-  echo "A mentés elkezdődött..." > $log_loc
-  #minen egyes directory-t letömör0tünk a mentési heylre
-  while read dir_path
-  do
-    dir_name=$(basename $dir_path)
+  	echo "A mentés elkezdődött..." > $log_loc
+  	#minen egyes directory-t letömör0tünk a mentési heylre
+  	while read dir_path
+  	do
+  	dir_name=$(basename $dir_path)
 
-    filename=$backup_path$dir_name.tar.gz
+  	filename=$backup_path$dir_name.tar.gz
+  	tar -zcf $filename $dir_path 2>>$log_loc
 
-    tar -zcf $filename $dir_path 2>>$log_loc
+   	##megváltoztatjuk a mentési fájlok tulajdon jogát root-ra
+  	chown bence:bence $filename
 
-    ##megváltoztatjuk a mentési fájlok tulajdon jogát root-ra
-    chown bence:bence $filename
+  	echo "A $dir_name mentése elkészült." >> $log_loc
 
-    echo "A $dir_name mentése elkészült." >> $log_loc
+  	done < /backup_dirs.conf
 
-  done < /backup_dirs.conf
-
-  echo "A mentés befejeződött ekkor:" >> $log_loc
-  date >> $log_loc
+  	echo "A mentés befejeződött ekkor:" >> $log_loc
+  	date >> $log_loc
 }
 
 check_dir_loc
