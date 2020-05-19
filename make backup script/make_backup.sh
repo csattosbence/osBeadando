@@ -7,7 +7,6 @@
 log_loc = "/var/log/mybackup.log"
 ##
 function check_dir_loc {
-  ##check for dir list files
   if [ ! -s  "/backup_dirs.conf" ]
   then
     echo "Kérem készítsen egy listát azokról a mappákról/directory-ról amről mentést szeretne készíteni.
@@ -46,9 +45,6 @@ function perform_backup {
 
   	filename=$backup_path$dir_name.tar.gz
   	tar -zcf $filename $dir_path 2>>$log_loc
-
-   	##megváltoztatjuk a mentési fájlok tulajdon jogát root-ra
-  	chown bence:bence $filename
 
   	echo "A $dir_name mentése elkészült." >> $log_loc
 
