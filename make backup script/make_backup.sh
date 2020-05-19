@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## hetente mentéseket készít a kiválasztott directoryban
+## hetente mentéseket készít a kiválasztott directory-ról.
 
 ##válltozók
 ##log file
@@ -34,24 +34,24 @@ function check_schedule {
 
 }
 function perform_backup {
-	 #eltároljuk a mentési helyet
- 	 backup_path = $(cat /backup_loc.conf)
+  #eltároljuk a mentési helyet
+  backup_path = $(cat /backup_loc.conf)
 
-  	echo "A mentés elkezdődött..." > $log_loc
-  	#minen egyes directory-t letömör0tünk a mentési heylre
-  	while read dir_path
-  	do
-  	dir_name=$(basename $dir_path)
+  echo "A mentés elkezdődött..." > $log_loc
+  #minen egyes directory-t letömör0tünk a mentési heylre
+  while read dir_path
+  do
+  dir_name=$(basename $dir_path)
 
-  	filename=$backup_path$dir_name.tar.gz
-  	tar -zcf $filename $dir_path 2>>$log_loc
+  filename=$backup_path$dir_name.tar.gz
+  tar -zcf $filename $dir_path 2>>$log_loc
 
-  	echo "A $dir_name mentése elkészült." >> $log_loc
+  echo "A $dir_name mentése elkészült." >> $log_loc
 
-  	done < /backup_dirs.conf
+  done < /backup_dirs.conf
 
-  	echo "A mentés befejeződött ekkor:" >> $log_loc
-  	date >> $log_loc
+  echo "A mentés befejeződött ekkor:" >> $log_loc
+  date >> $log_loc
 }
 
 check_dir_loc
